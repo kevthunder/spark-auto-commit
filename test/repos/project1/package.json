@@ -1,0 +1,15 @@
+{
+  "name": "spark-auto-commit-test1",
+  "version": "0.1.0",
+  "description": "test project for spark-auto-commit",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "spark-auto-commit": "file:../../.."
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "author": "",
+  "license": "ISC"
+}
