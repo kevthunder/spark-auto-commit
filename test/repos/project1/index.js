@@ -9,4 +9,9 @@ autoCommit(function(){
     console.log('file created');
     return  'new file';
   });
-})
+}).then(function(res){
+  console.log(res);
+}).catch(function(err){
+  console.error(err);
+  process.exit(1);
+});

@@ -11,18 +11,22 @@ var AutoCommit = function(opt, cb){
   }
   opt = Object.assign({},AutoCommit.defaults,opt);
 
-  return AutoCommit.whenRepoClean(function(){
-    return asyncDone(cb).then(function(res){
-      return AutoCommit.whenRepoDirty(function(){
+  return AutoCommit.checkRepoClean().then(function(clean){
+    if(!clean){
+      return Promise.reject('Working tree is not clean');
+    }
+  }).then(function(){
+    return asyncDone(cb);
+  }).then(function(res){
+    return AutoCommit.checkRepoClean().then(function(clean){
+      if(clean){
+        return 'No change done. Nothing to do';
+      }else{
         return AutoCommit.addAndCommit(res).then(function(res){
           return 'Changes commited';
         });
-      });
+      }
     });
-  }).then(function(res){
-    return 'Done :' + res;
-  }).catch(function(err){
-    console.log('Error :',err);
   });
 
 };
@@ -36,27 +40,6 @@ AutoCommit.checkRepoClean = function(fn){
   return exec('git status --porcelain', {}).then(function(out){
     return out.stdout === "";
   });
-}
-
-AutoCommit.whenRepoClean = function(fn){
-  return exec('git status --porcelain', {}).then(function(out){
-    if(out.stdout === ""){
-      return fn();
-    }else{
-      return Promise.reject('Working tree is not clean');
-    }
-  })
-}
-
-
-AutoCommit.whenRepoDirty = function(fn){
-  return exec('git status --porcelain', {}).then(function(out){
-    if(out.stdout !== ""){
-      return fn();
-    }else{
-      return 'Working tree is clean';
-    }
-  })  
 }
 
 
