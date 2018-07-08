@@ -1,6 +1,12 @@
 var autoCommit = require('spark-auto-commit');
+var util = require('util');
+var writeFile = util.promisify(require('fs').writeFile)
 
-console.log(autoCommit(function(done){
+
+autoCommit(function(){
   console.log('do something');
-  done()
-}))
+  return writeFile('./test','Hello, world!').then(function(){
+    console.log('file created');
+    return  'new file';
+  });
+})
