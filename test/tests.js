@@ -12,7 +12,7 @@ var files = require('../helpers/files');
 describe('AutoCommit', function() {
   before(function() {
     projects = ['project2','project1'];
-    this.timeout(10000);
+    this.timeout(20000);
     return Promise.resolve().then(function(){
       console.log('   - delete old test folder');
       return rimraf('test/tmp');
@@ -60,7 +60,7 @@ describe('AutoCommit', function() {
   });
 
   it('commit after module update', function() {
-    this.timeout(10000);
+    this.timeout(15000);
     console.log('   - change dependency version');
     return exec('npm version patch', {cwd:'test/tmp/project2'}).then(function(out){
       console.log('   - push dependency');

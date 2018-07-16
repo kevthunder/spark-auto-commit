@@ -8,13 +8,22 @@ module.exports = {
       return JSON.parse(out.stdout)
     });
   },
-  filterModuleUpdates : function(updates, filter){
-    return updates.filter(function(u){
-      return u.version !== u.previousVersion && (
-          filter == null ||
-          (typeof filter === "function" && filter(u)) ||
-          (typeof filter.test === "function" && filter.test(u.name))
-        )
-    });
-  } 
+  filterModuleUpdates : function(changes, filter){
+    return changes.added.filter( (added) => {
+      if(this.testChangeFilter(added,filter)){
+        var matching = changes.removed.find(function(removed){
+          return removed.name == added.name
+        });
+        return matching != null && added.version !== matching.version
+      }
+      return false
+    }).concat(changes.updated.filter( (updated) => {
+      return updated.version !== updated.previousVersion && this.testChangeFilter(updated,filter)
+    }))
+  },
+  testChangeFilter: function(change,filter){
+    return filter == null ||
+          (typeof filter === "function" && filter(change)) ||
+          (typeof filter.test === "function" && filter.test(change.name));
+  }
 } 

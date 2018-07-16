@@ -45,7 +45,7 @@ AutoCommit.afterModuleUpdate = function(opt, cb){
   }
   return AutoCommit(opt, function(){
     return npm.getUpdates().then(function(res){
-      var updates = npm.filterModuleUpdates(res.updated, opt.filter);
+      var updates = npm.filterModuleUpdates(res, opt.filter);
       if(updates.length > 0){
         return asyncDone(cb).then(function(res){
           return 'Update ' + str.englishEnumeration(updates.map(function(u){
